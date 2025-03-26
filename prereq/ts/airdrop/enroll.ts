@@ -25,7 +25,6 @@ const [enrollment_key, _bump] =
 
 async function enroll() {
   try {
-    // @ts-ignore
     const txhash = await program.methods
       .submit(github)
       .accounts({
