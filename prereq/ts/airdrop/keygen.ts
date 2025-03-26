@@ -1,5 +1,5 @@
-import { Keypair } from "@solana/web3.js";
-import bs58 from 'bs58'
+import { Keypair } from '@solana/web3.js';
+import bs58 from 'bs58';
 import * as fs from 'fs';
 
 function saveSecretKeyInSolanaWalletFromat(secretKey: Uint8Array) {
@@ -15,7 +15,7 @@ function base58_to_wallet(secretKey: string): Uint8Array {
 }
 
 //Generate a new keypair
-let kp = Keypair.generate()
+let kp = Keypair.generate();
 console.log(`You've generated a new Solana wallet: ${kp.publicKey.toBase58()}`);
 
 saveSecretKeyInSolanaWalletFromat(kp.secretKey);
