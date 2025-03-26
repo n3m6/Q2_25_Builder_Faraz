@@ -20,4 +20,3 @@ console.log(`You've generated a new Solana wallet: ${kp.publicKey.toBase58()}`);
 
 saveSecretKeyInSolanaWalletFromat(kp.secretKey);
 
-//console.log(`Secret key in phantom format: ${wallet_to_base58(kp.secretKey)}`);
