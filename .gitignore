@@ -137,3 +137,7 @@ dist
 
 # IDEA
 .idea
+
+# Dev Wallets
+dev-wallet.json
+*wallet.json
