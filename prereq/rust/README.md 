@@ -1,0 +1,8 @@
+# Airdrop with Rust
+
+Uncomment the tests in `src/lib.rs` and run one by one
+
+- `cargo test -- --nocapture` to see output of tests
+
+
+
