@@ -1269,6 +1269,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rust-airdrop@workspace:prereq/rust":
+  version: 0.0.0-use.local
+  resolution: "rust-airdrop@workspace:prereq/rust"
+  languageName: unknown
+  linkType: soft
+
 "safe-buffer@npm:^5.0.1":
   version: 5.2.1
   resolution: "safe-buffer@npm:5.2.1"
