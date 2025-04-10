@@ -2,6 +2,7 @@
 
 This is a yarn monorepo. It contains the following packages:
 
+- `docs`: Various docs prepared for classes, and other documentation assets
 - `prereq\ts`: TypeScript exercises for the prerequisites
 - `prereq\rust`: Rust exercises for the prerequisites
 
@@ -24,3 +25,14 @@ yarn install
 ```
 
 install all dependencies
+
+## Thanks
+
+Many thanks to Solana Turbin3, for being an awesome school for Rust developers.
+
+<img src="./docs/assets/turbine-logo-text.svg" alt="Turbin3" width="200"/>
+
+
+## License
+
+This code is free to use under the terms of the MIT license. See [LICENSE](LICENSE).
