@@ -25,11 +25,11 @@ avm 0.30.1
 
 ## Getting Started
 
+Run the following in the monorepo root directory to install all dependencies.
+
 ```
 yarn install
 ```
-
-install all dependencies
 
 ## Thanks
 
