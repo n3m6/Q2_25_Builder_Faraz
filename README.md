@@ -7,6 +7,9 @@ This is a yarn monorepo. It contains the following packages:
 - `docs`: Various docs prepared for classes, and other documentation assets
 - `prereq\ts`: TypeScript exercises for the prerequisites
 - `prereq\rust`: Rust exercises for the prerequisites
+- `classes\solana-starter`: Turbin3 exercises
+- `classes\vault-anchor`: Vault demo program
+- `classes\escrow`: Escrow demo program
 
 ## Minimum requirements
 
