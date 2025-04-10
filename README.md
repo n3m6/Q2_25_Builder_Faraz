@@ -1,5 +1,7 @@
 # Monorepo for Turbin3 Builders Cohort Q2 Exercises
 
+<img src="./docs/assets/classroom.jpeg" alt="Turbin3" width="650"/>
+
 This is a yarn monorepo. It contains the following packages:
 
 - `docs`: Various docs prepared for classes, and other documentation assets
