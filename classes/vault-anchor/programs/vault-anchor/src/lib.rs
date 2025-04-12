@@ -55,18 +55,6 @@ impl<'info> Initialize<'info> {
 
         Ok(())
     }
-
-    pub fn deposit(ctx: Context<Payment>, amount: u64) -> Result<()> {
-        ctx.accounts.deposit(amount)
-    }
-
-    pub fn withdraw(ctx: Context<Payment>, amount: u64) -> Result<()> {
-        ctx.accounts.withdraw(amount)
-    }
-
-    pub fn close(ctx: Context<Close>) -> Result<()> {
-        ctx.accounts.close()
-    }
 }
 
 #[derive(Accounts)]
@@ -81,7 +69,7 @@ pub struct Payment<'info> {
     pub vault_state: Account<'info, VaultState>,
 
     #[account(
-        seeds = [b"vault", user.key().as_ref()],
+        seeds = [b"vault", vault_state.key().as_ref()],
         bump = vault_state.vault_bump,
     )]
     pub vault: SystemAccount<'info>,

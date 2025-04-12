@@ -1,7 +1,7 @@
-import { publicKey } from '@metaplex-foundation/umi';
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { VaultAnchor } from "../target/types/vault_anchor";
+import { expect } from 'chai';
 
 describe("vault-anchor", () => {
 
@@ -33,10 +33,8 @@ describe("vault-anchor", () => {
     .rpc();
 
     console.log(`Your transaction signature`, tx);
-    console.log(
-      'Your vault info',
-      await provider.connection.getAccountInfo(vault)
-    );
+    const vaultInfo = await provider.connection.getAccountInfo(vault)
+    console.log('Your vault info', vaultInfo);
   });
 
   it("should allow deposits of sol", async () => {
@@ -47,13 +45,11 @@ describe("vault-anchor", () => {
         vaultState,
         vault,
         systemProgram,
-      });
+      }).rpc();
 
       console.log(`Your transaction signature`, tx);
-      console.log(
-        'Your vault info',
-        await provider.connection.getAccountInfo(vault)
-      );
+      const vaultInfo = await provider.connection.getAccountInfo(vault)
+      console.log('Your vault info', vaultInfo);
       console.log(
         'Your vault balance',
         ((await provider.connection.getBalance(vault)).toString())
@@ -68,7 +64,7 @@ describe("vault-anchor", () => {
         vaultState,
         vault,
         systemProgram,
-      });
+      }).rpc();
 
       console.log(`Your transaction signature`, tx);
       console.log(
@@ -89,7 +85,7 @@ describe("vault-anchor", () => {
       vaultState,
       vault,
       systemProgram,
-    });
+    }).rpc();
 
     console.log(`Your transaction signature`, tx);
     console.log(
@@ -100,8 +96,5 @@ describe("vault-anchor", () => {
       'Your vault balance',
       ((await provider.connection.getBalance(vault)).toString())
     );
-  })
-
-
-
+  });
 });
