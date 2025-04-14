@@ -2,6 +2,7 @@
   "name": "t3-builders-2025-q2",
   "version": "1.0.0",
   "description": "Turbin3 Builders Cohort Q2",
+  "private": true,
   "scripts": {
     "format": "prettier . --write"
   },

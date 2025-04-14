@@ -19,6 +19,10 @@ pub mod vault_anchor {
     pub fn withdraw(ctx: Context<Payment>, amount: u64) -> Result<()> {
         ctx.accounts.withdraw(amount)
     }
+
+    pub fn close(ctx: Context<Close>) -> Result<()> {
+        ctx.accounts.close()
+    }
 }
 
 #[derive(Accounts)]
@@ -31,12 +35,12 @@ pub struct Initialize<'info> {
         payer = user,
         seeds = [b"state", user.key().as_ref()],
         bump,
-        space = VaultState::INIT_SPACE,
+        space = 8 + VaultState::INIT_SPACE,
     )]
     pub vault_state: Account<'info, VaultState>,
 
     #[account(
-        seeds = [b"vault", user.key().as_ref()],
+        seeds = [b"vault", vault_state.key().as_ref()],
         bump,
     )]
     pub vault: SystemAccount<'info>,
@@ -50,18 +54,6 @@ impl<'info> Initialize<'info> {
         self.vault_state.state_bump = bumps.vault_state;
 
         Ok(())
-    }
-
-    pub fn deposit(ctx: Context<Payment>, amount: u64) -> Result<()> {
-        ctx.accounts.deposit(amount)
-    }
-
-    pub fn withdraw(ctx: Context<Payment>, amount: u64) -> Result<()> {
-        ctx.accounts.withdraw(amount)
-    }
-
-    pub fn close(ctx: Context<Close>) -> Result<()> {
-        ctx.accounts.close()
     }
 }
 
@@ -77,7 +69,7 @@ pub struct Payment<'info> {
     pub vault_state: Account<'info, VaultState>,
 
     #[account(
-        seeds = [b"vault", user.key().as_ref()],
+        seeds = [b"vault", vault_state.key().as_ref()],
         bump = vault_state.vault_bump,
     )]
     pub vault: SystemAccount<'info>,
@@ -106,25 +98,17 @@ impl<'info> Payment<'info> {
 
         let binding = self.user.key();
 
-        let seeds = &[
-            b"vault",
-            binding.as_ref(),
-            &[self.vault_state.vault_bump],
-        ];
+        let seeds = &[b"vault", binding.as_ref(), &[self.vault_state.vault_bump]];
         let signer_seeds = &[&seeds[..]];
 
-        let cpi_ctx = CpiContext::new_with_signer(
-            cpi_program,
-            cpi_accounts,
-            signer_seeds,
-        );
+        let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer_seeds);
 
         transfer(cpi_ctx, amount)
     }
 }
 
 #[derive(Accounts)]
-pub struct Close <'info> {
+pub struct Close<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
 
@@ -145,7 +129,7 @@ pub struct Close <'info> {
     pub system_program: Program<'info, System>,
 }
 
-impl<'info> Close <'info> {
+impl<'info> Close<'info> {
     pub fn close(&mut self) -> Result<()> {
         Ok(())
     }
