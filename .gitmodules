@@ -1,0 +1,3 @@
+[submodule "capstone"]
+	path = capstone
+	url = git@github.com:riseon-dev/archon.git
