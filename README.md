@@ -10,6 +10,7 @@ This is a yarn monorepo. It contains the following packages:
 - `classes\solana-starter`: Turbin3 exercises
 - `classes\vault-anchor`: Vault demo program
 - `classes\escrow`: Escrow demo program
+- `capstone`: Capstone project - monorepo for Riseon SocialFi app
 
 ## Minimum requirements
 
@@ -21,9 +22,21 @@ rustc 1.81.0 (eeb90cda1 2024-09-04)
 
 $ avm --version
 avm 0.30.1
+
+$ node --version
+v23.9.0
+
+$ yarn --version
+4.7.0
 ```
 
 ## Getting Started
+
+Fetch all the latest changes for the monorepo
+
+```
+git submodule update --init --recursive
+```
 
 Run the following in the monorepo root directory to install all dependencies.
 
