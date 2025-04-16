@@ -10,6 +10,7 @@ This is a yarn monorepo. It contains the following packages:
 - `classes\solana-starter`: Turbin3 exercises
 - `classes\vault-anchor`: Vault demo
 - `classes\escrow`: Escrow demo
+- `classes\mikes-escrow`: Escrow demo (Mike Maccana version)
 - `classes\marketplace`: NFT marketplace demo
 - `capstone`: Capstone project - monorepo for Riseon SocialFi app
 
@@ -50,7 +51,6 @@ yarn install
 Many thanks to Solana Turbin3, for being an awesome school for Rust developers.
 
 <img src="./docs/assets/turbine-logo-text.svg" alt="Turbin3" width="200"/>
-
 
 ## License
 
