@@ -8,8 +8,9 @@ This is a yarn monorepo. It contains the following packages:
 - `prereq\ts`: TypeScript exercises for the prerequisites
 - `prereq\rust`: Rust exercises for the prerequisites
 - `classes\solana-starter`: Turbin3 exercises
-- `classes\vault-anchor`: Vault demo program
-- `classes\escrow`: Escrow demo program
+- `classes\vault-anchor`: Vault demo
+- `classes\escrow`: Escrow demo
+- `classes\marketplace`: NFT marketplace demo
 - `capstone`: Capstone project - monorepo for Riseon SocialFi app
 
 ## Minimum requirements
