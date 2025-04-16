@@ -12,6 +12,7 @@ This is a yarn monorepo. It contains the following packages:
 - `classes\escrow`: Escrow demo
 - `classes\mikes-escrow`: Escrow demo (Mike Maccana version)
 - `classes\marketplace`: NFT marketplace demo
+- `classes\nft-staking`: NFT staking demo
 - `capstone`: Capstone project - monorepo for Riseon SocialFi app
 
 ## Minimum requirements
