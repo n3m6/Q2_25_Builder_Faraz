@@ -1,0 +1,23 @@
+{
+  "license": "MIT",
+  "scripts": {
+    "build": "anchor build",
+    "test": "anchor test",
+    "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
+    "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.30.1"
+  },
+  "devDependencies": {
+    "@codama/nodes-from-anchor": "^1.1.8",
+    "@codama/renderers": "^1.0.16",
+    "@types/node": "^22.13.5",
+    "codama": "^1.2.8",
+    "prettier": "^3.4.2",
+    "solana-kite": "^1.1.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "type": "module"
+}

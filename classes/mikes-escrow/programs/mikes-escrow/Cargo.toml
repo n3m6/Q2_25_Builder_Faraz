@@ -1,12 +1,12 @@
 [package]
-name = "marketplace"
+name = "mikes-escrow"
 version = "0.1.0"
-description = "Created with Anchor"
+description = "A working minimal Anchor Escrow app"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "marketplace"
+name = "mikes_escrow"
 
 [features]
 default = []

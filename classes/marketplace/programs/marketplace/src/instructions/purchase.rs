@@ -1,5 +1,5 @@
 use anchor_lang::{prelude::*, solana_program::system_program, system_program::Transfer, transfer};
-use anchor_spl::{token::TokenAccount, token_interface::{Mint, TokenInterface}};
+use anchor_spl::{token::{CloseAccount, TokenAccount}, token_interface::{Mint, TokenInterface}};
 
 use crate::state::{Listing, Marketplace};
 use crate::instruction::Initialize;
@@ -106,7 +106,46 @@ impl<'info> Purchase<'info> {
     transfer(cpi_ctx, cpi_accounts)
   }
 
-  pub send_nft(&self mut) -> Result<()> {
+  pub fn send_nft(&self mut) -> Result<()> {
+    let seeds = &[
+      &self.marketplace.key().to_bytes()[..],
+      &self.maker_mint.key().to_bytes()[..],
+      &[self.listing.bump]
+    ];
+
+    let signer_seeds = &[&seeds[..]];
+
+    let cpi_program = self.token_program.to_account_info();
+    let cpi_accoounts = TransferChecked {
+      from: self.vault.to_account_info(),
+      mint: self.maker_mint
+    }
+
     Ok(())
   }
+
+  pub fn close_mint_vault(&mut self) -> Result<()> {
+    let seeds = &[
+      &self.marketplace.key().to_bytes()[..],
+      &self.maker_mint.key().to_bytes()[..],
+      &[self.listing.bump]
+    ];
+
+    let signer_seeds = &[&seeds[..]];
+
+    let cpi_program = self.token_program.to_account_info();
+
+    let close_accounts = CloseAccount {
+      account: self.vault.to_account_info(),
+      destination: self.maker.to_account_info(),
+      authority: self.listing.to_account_info(),
+    };
+
+    let cpi_ctx = CpiContext::new_with_signer(cpi_program, close_accounts, signer_seeds);
+
+    close_accounts()
+  }
+
+
+
 }
