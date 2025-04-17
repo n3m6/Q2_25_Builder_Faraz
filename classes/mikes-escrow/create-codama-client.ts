@@ -18,7 +18,7 @@ const loadJSON = async (...pathSegments: Array<string>) => {
 };
 
 // Instantiate Codama
-const idl = await loadJSON("target", "idl", "escrow.json");
+const idl = await loadJSON("target", "idl", "mikes_escrow.json");
 
 const codama = createFromRoot(rootNodeFromAnchor(idl));
 

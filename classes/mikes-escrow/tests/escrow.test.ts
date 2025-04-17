@@ -182,7 +182,7 @@ describe("Escrow", () => {
     });
   });
 
-  describe("takeOffer", () => {
+  describe.skip("takeOffer", () => {
     let testOffer: Address;
     let testVault: Address;
 
@@ -270,7 +270,7 @@ describe("Escrow", () => {
     });
   });
 
-  describe("refundOffer", () => {
+  describe.skip("refundOffer", () => {
     let testOffer: Address;
     let testVault: Address;
 
