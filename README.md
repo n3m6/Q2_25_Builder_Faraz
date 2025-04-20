@@ -7,12 +7,7 @@ This is a yarn monorepo. It contains the following packages:
 - `docs`: Various docs prepared for classes, and other documentation assets
 - `prereq\ts`: TypeScript exercises for the prerequisites
 - `prereq\rust`: Rust exercises for the prerequisites
-- `classes\solana-starter`: Turbin3 exercises
-- `classes\vault-anchor`: Vault demo
-- `classes\escrow`: Escrow demo
-- `classes\mikes-escrow`: Escrow demo (Mike Maccana version)
-- `classes\marketplace`: NFT marketplace demo
-- `classes\nft-staking`: NFT staking demo
+- `classes`: Various Turbin3 exercises
 - `capstone`: Capstone project - monorepo for Riseon SocialFi app
 
 ## Minimum requirements

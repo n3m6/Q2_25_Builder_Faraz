@@ -1,3 +1,18 @@
 [submodule "capstone"]
 	path = capstone
 	url = git@github.com:riseon-dev/archon.git
+[submodule "anchor-vault"]
+	path = anchor-vault
+	url = git@github.com:n3m6/anchor-vault-demo.git
+[submodule "anchor-escrow"]
+	path = anchor-escrow
+	url = git@github.com:n3m6/anchor-escrow-demo.git
+[submodule "anchor-amm"]
+	path = anchor-amm
+	url = git@github.com:n3m6/anchor-amm-demo.git
+[submodule "anchor-marketplace"]
+	path = anchor-marketplace
+	url = git@github.com:n3m6/anchor-marketplace-demo.git
+[submodule "anchor-nft-staking"]
+	path = anchor-nft-staking
+	url = git@github.com:n3m6/anchor-nft-staking-demo.git
