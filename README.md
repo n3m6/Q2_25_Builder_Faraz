@@ -14,7 +14,7 @@ This is a yarn monorepo. It contains the following packages:
 - `anchor-marketplace`: Anchor marketplace demo
 - `anchor-nft-staking`: Anchor NFT staking demo
 - `capstone`: Capstone project - monorepo for Riseon SocialFi app
-- 
+
 ## Minimum requirements
 
 For Rust packages in the monorepo these are the minimum requirements.
