@@ -8,8 +8,13 @@ This is a yarn monorepo. It contains the following packages:
 - `prereq\ts`: TypeScript exercises for the prerequisites
 - `prereq\rust`: Rust exercises for the prerequisites
 - `classes`: Various Turbin3 exercises
+- `anchor-vault`: Anchor vault demo
+- `anchor-escrow`: Anchor escrow demo
+- `anchor-amm`: Anchor AMM demo
+- `anchor-marketplace`: Anchor marketplace demo
+- `anchor-nft-staking`: Anchor NFT staking demo
 - `capstone`: Capstone project - monorepo for Riseon SocialFi app
-
+- 
 ## Minimum requirements
 
 For Rust packages in the monorepo these are the minimum requirements.
