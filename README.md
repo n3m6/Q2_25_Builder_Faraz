@@ -47,6 +47,21 @@ Run the following in the monorepo root directory to install all dependencies.
 yarn install
 ```
 
+## Documentation
+
+Generating pdfs from markdown
+
+```
+# Step 1: Convert Mermaid diagrams to PDFs
+mmdc -i input.md --outputFormat=pdf --pdfFit -o preprocessed.md
+
+# Step 2: Generate final PDF
+pandoc preprocessed.md -f markdown-implicit_figures -o output.pdf
+
+# Optional: Clean up
+rm preprocessed.md preprocessed-*.pdf
+```
+
 ## Thanks
 
 Many thanks to Solana Turbin3, for being an awesome school for Rust developers.
