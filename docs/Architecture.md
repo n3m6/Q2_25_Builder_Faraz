@@ -68,7 +68,7 @@ The account `CopyTradingVault` is the main account for the protocol.
 
 BalanceState is a data structure that tracks the changes to the SOL balance of the vault.
 
-- `update`: the type of update (e.g., deposit, withdraw, swap)
+- `update`: the type of update (e.g., deposit, withdraw, swap represented by a u8)
 - `balance`: the new balance of the vault after the update
 
 ### UserShare
@@ -93,6 +93,8 @@ flowchart TD
     F --> G[Transfer SOL to CopyTradingVault]
     G --> H[Update UserShare]
 ```
+
+- User deposits SOL and if the user is not present in the vault a UserShare account is created for the user
 
 ## Swap Flowcharts
 
@@ -119,3 +121,5 @@ flowchart TD
     F --> G[Update balance_ledger]
     G --> H[Update UserShare]
 ```
+
+- Tokens have to be converted to SOL before they can be withdrawn
