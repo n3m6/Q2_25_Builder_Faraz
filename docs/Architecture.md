@@ -2,21 +2,21 @@
 
 ```mermaid
 sequenceDiagram
-    actor User1
-    actor User2
+    actor User-1
+    actor User-n
     actor Operator
     participant Vault
     participant AMM
-    User1->>+Vault: Deposit SOL
-    User2->>+Vault: Deposit SOL
+    User-1->>+Vault: Deposit SOL
+    User-n->>+Vault: Deposit SOL
     Operator->>+Vault:Initiate swap
     Vault->>+AMM: swap SOL
     AMM-->>-Vault: tokens
     Operator->>+Vault:Initiate swap
     Vault->>+AMM: swap tokens
     AMM-->>-Vault: SOL
-    User1->>+Vault: Withdraw
-    Vault-->>-User1: SOL
+    User-1->>+Vault: Withdraw
+    Vault-->>-User-1: SOL
 ```
 
 ## Protocol POC Requirements
@@ -108,6 +108,8 @@ flowchart TD
     F --> G[Transfer tokens from AMM to CopyTradingVault]
     G --> H[Update balance_ledger]
 ```
+
+- For tokens to SOL the flow is the same except the swap is from tokens to SOL
 
 ## Withdraw Flowcharts
 
