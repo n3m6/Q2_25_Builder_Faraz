@@ -2,30 +2,36 @@
 
 ```mermaid
 sequenceDiagram
-    actor User-1
-    actor User-n
+    actor User
     actor Operator
     participant Vault
     participant AMM
-    User-1->>+Vault: Deposit SOL
-    User-n->>+Vault: Deposit SOL
+    User->>+Vault: Deposit SOL
+    Vault-->>-User: Vault token
     Operator->>+Vault:Initiate swap
-    Vault->>+AMM: swap SOL
-    AMM-->>-Vault: tokens
+    Vault->>+AMM: Swap SOL
+    AMM-->>-Vault: Tokens
     Operator->>+Vault:Initiate swap
-    Vault->>+AMM: swap tokens
+    Vault->>+AMM: Swap tokens
     AMM-->>-Vault: SOL
-    User-1->>+Vault: Withdraw
-    Vault-->>-User-1: SOL
+    User->>Vault: Unlock SOL request, burn vault token
+    Note right of Vault: SOL not available for withdrawal
+    Vault->>+AMM: Swap tokens
+    AMM-->>-Vault: SOL
+    Note right of Vault: SOL unlocked equivalent to burnt tokens
+    User->>+Vault: Withdraw SOL request
+    Vault-->>-User: SOL
 ```
 
 ## Protocol POC Requirements
 
 1. Protocol shall allow users to deposit SOL
-2. Protocol shall allow vault operators to swap SOL any other token
-3. Protocol shall allow vault operators to swap tokens to SOL
-4. Protocol shall keep a record of changes to SOL balance
-5. Protocol shall allow users to withdraw SOL
+2. Protocol shall issue vault tokens to users
+3. Protocol shall allow vault operators to swap SOL any other token
+4. Protocol shall allow vault operators to swap tokens to SOL
+5. Protocol shall keep a record of changes to SOL balance
+6. Protocol shall allow users to initiate withdrawal of SOL by burning vault tokens
+7. Protocol shall allow users to withdraw SOL when SOL is available
 
 ## Account Overview
 
@@ -33,24 +39,19 @@ sequenceDiagram
 classDiagram
 class CopyTradingVault {
     + operator: Pubkey
-    + max_users: u16
-    + minimum_deposit: u64
-    + users: Vec[Pubkey]
-    + balance_ledger: Vec[BalanceState]
+    + tokens_issued: u64
+    + tokens_burnt: u64
+    + sol_in_trade: u64
+    + token_price: u64
     + bump: u8
 }
 
-class BalanceState {
-    + update: u8
-    + balance: u64
-}
-
-class UserShare {
-    + owner: Pubkey
-    + share: u64
-    + balance_ledger: u64
+class UserClaim {
+    + user: Pubkey
+    + sol_amount: u64
     + bump: u8
 }
+
 ```
 
 ### CopyTradingVault
@@ -58,70 +59,84 @@ class UserShare {
 The account `CopyTradingVault` is the main account for the protocol.
 
 - `operator`: is the operator of the vault
-- `max_users`: maximum number of users that can deposit into the vault
-- `minimum_deposit`: minimum deposit amount for users
-- `users`: a list of users that have deposited into the vault
-- `balance_ledger`: a list of changes to SOL balance of the vault
+- `tokens_issued`: is the token supply issued to users in circulation
+- `tokens_burnt`: is the amount of tokens burnt BUT NOT YET WITHDRAWN
+- `sol_in_trade`: is the amount of SOL in trade
+- `token_price`: is the price of the token in SOL
 - `bump`: unique identifier for the account
 
-### BalanceState
+## UserClaim
+The account `UserClaim` is used to keep track of the amount of SOL vault owes user after user burns his tokens.
 
-BalanceState is a data structure that tracks the changes to the SOL balance of the vault.
-
-- `update`: the type of update (e.g., deposit, withdraw, swap represented by a u8)
-- `balance`: the new balance of the vault after the update
-
-### UserShare
-
-The `UserShare` account is used to track the share of each user in the vault.
-
-- `owner`: the owner of the share
-- `share`: the share of user's SOL in the vault
-- `balance_ledger`: the position of the user in the balance state chain
+- `user`: is the user who has a claim on the vault
+- `sol_amount`: is the amount of SOL the user has a claim on
 - `bump`: unique identifier for the account
 
 ## Deposit Flowcharts
-
 ```mermaid
 flowchart TD
-    A[User] -->|Deposit| B[CopyTradingVault]
-    B -->|Check if user is already in vault| C{User exists?}
-    C -->|Yes| D[Update CopyTradingVault balance_ledger]
-    D --> I[Update UserShare]
-    C -->|No| E[Create UserShare]
-    E --> F[Update CopyTradingVault balance_ledger]
-    F --> G[Transfer SOL to CopyTradingVault]
-    G --> H[Update UserShare]
+    A((User)) --> B[/Deposit SOL/]
+    B --> C[Vault]
+    C --> D[/Issue Vault Token/]
+    D --> E((User))
 ```
-
-- User deposits SOL and if the user is not present in the vault a UserShare account is created for the user
-
-## Swap Flowcharts
-
-```mermaid
-flowchart TD
-    A[Operator] -->|Swap| B[CopyTradingVault]
-    B -->|Check if operator is vault operator| C{Operator?}
-    C -->|Yes| D[Transfer SOL to AMM]
-    C -->|No| E[Error]
-    D --> F[Swap SOL to tokens]
-    F --> G[Transfer tokens from AMM to CopyTradingVault]
-    G --> H[Update balance_ledger]
-```
-
-- For tokens to SOL the flow is the same except the swap is from tokens to SOL
 
 ## Withdraw Flowcharts
 
 ```mermaid
 flowchart TD
-    A[User] -->|Withdraw| B[CopyTradingVault]
-    B -->|Check if user is in vault| C{User exists?}
-    C -->|Yes| D[Update UserShare using balance_ledger]
-    C -->|No| E[Error]
-    D --> F[Transfer SOL to User using updated balance]
-    F --> G[Update balance_ledger]
-    G --> H[Update UserShare]
+    A((User)) --> B[/Burn Vault Token/]
+    B --> C[Vault]
+    C --> D[/Open Claim Against Vault/]
+    D --> E[UserClaim]
+    E --> F((User))
 ```
 
-- Tokens have to be converted to SOL before they can be withdrawn
+### When SOL is available
+
+```mermaid
+flowchart TD
+    A((User)) --> B[/Withdraw Request/]
+    B --> C[Vault]
+    C --> D{Check UserClaim}
+    D -->|Claim Exists| E{Check SOL Balance}
+    D -->|Claim Does Not Exist| F[Error Does Not Have Claim]
+    E -->|SOL Available| G[/Transfer SOL to User/]
+    E -->|SOL Not Available| H[Error Not Enough SOL]
+    G --> I((User))
+    
+```
+
+## Swap
+
+### SOL to token swap
+
+```mermaid 
+flowchart TD
+    A((Operator)) -->B[/Initiate Swap/]
+    B --> C[Vault]
+    C --> K[/Check SOL Balance Minus Burnt/]
+    K --> D[/Transfer SOL to AMM/]
+    D --> E[AMM]
+    E --> F[/Swap SOL/]
+    F --> G[/Transfer Tokens to Vault/]
+    G --> C
+    C --> H[/Update Token Price/]
+    H --> I((X))
+```
+
+### Token to SOL swap
+
+```mermaid
+flowchart TD
+    A((Operator)) -->B[/Initiate Swap/]
+    B --> C[Vault]
+    C --> D[/Transfer Tokens to AMM/]
+    D --> E[AMM]
+    E --> F[/Swap Tokens/]
+    F --> G[/Transfer SOL to Vault/]
+    G --> C
+    C --> H[/Update Token Price/]
+    H --> I((X))
+```
+
