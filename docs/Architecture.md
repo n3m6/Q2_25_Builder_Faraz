@@ -41,19 +41,19 @@ sequenceDiagram
     actor Investor
     actor Operator
     participant Vault
-    participant AMM
+    participant AMM (Orca)
     Investor->>+Vault: Deposit SOL
     Vault-->>-Investor: Vault token
     Operator->>+Vault:Initiate swap
-    Vault->>+AMM: Swap SOL
-    AMM-->>-Vault: Tokens
+    Vault->>+AMM (Orca): Swap SOL
+    AMM (Orca)-->>-Vault: Tokens
     Operator->>+Vault:Initiate swap
-    Vault->>+AMM: Swap tokens
-    AMM-->>-Vault: SOL
+    Vault->>+AMM (Orca): Swap tokens
+    AMM (Orca)-->>-Vault: SOL
     Investor->>Vault: Unlock SOL request, burn vault token
     Note right of Vault: SOL not available for withdrawal
-    Vault->>+AMM: Swap tokens
-    AMM-->>-Vault: SOL
+    Vault->>+AMM (Orca): Swap tokens
+    AMM (Orca)-->>-Vault: SOL
     Note right of Vault: SOL unlocked equivalent to burnt tokens
     Investor->>+Vault: Withdraw SOL request
     Vault-->>-Investor: SOL
@@ -83,6 +83,14 @@ class CopyTradingVault {
     + tokens_burnt: u64
     + sol_in_trade: u64
     + token_price: u64
+    + mint: Pubkey
+    + bump: u8
+}
+
+class TradingPosition {
+    + operator: Pubkey
+    + token_amount: u64
+    + sol_amount: u64
     + bump: u8
 }
 
@@ -93,6 +101,7 @@ class InvestorClaim {
 }
 
 CopyTradingVault <-- InvestorClaim
+CopyTradingVault <-- TradingPosition
 ```
 
 ### CopyTradingVault (PDA)
@@ -105,9 +114,18 @@ to prevent drainage of SOL.
 - `name`: is the name of the vault
 - `tokens_issued`: is the token supply issued to investors in circulation
 - `tokens_burnt`: is the amount of tokens burnt **BUT NOT YET WITHDRAWN**
-- `sol_in_trade`: is the amount of SOL in trade
+- `sol_in_trade`: is the amount of SOL the vault has placed in a trade at the moment
 - `token_price`: is the price of the token in SOL
+- `mint`: is the mint address of the vault token
 - `bump`: unique identifier made of **operator pubkey** and **name**
+
+### TradingPosition (PDA)
+
+The `TradingPosition` account is used to track trading positions that the operator takes.
+- `operator`: is the operator of the vault
+- `token_amount`: is the amount of tokens received in a trade
+- `sol_amount`: is the amount of SOL placed in a trade
+- `bump`: unique identifier made of **operator pubkey**, **vault address** and **token mint address**
 
 ### InvestorClaim (PDA)
 The account `InvestorClaim` is used to keep track of the amount of SOL vault owes investor after the investor burns his tokens.
@@ -115,6 +133,11 @@ The account `InvestorClaim` is used to keep track of the amount of SOL vault owe
 - `investor`: is the user who has a claim on the vault
 - `sol_amount`: is the amount of SOL the investor has a claim on
 - `bump`: unique identifier made of **investor pubkey** and **vault address**
+
+### AMM
+
+At the moment we are considering using Orca as AMM for swapping tokens, because the CPI
+seems simpler to use.
 
 ## Deposit Flowcharts
 ```mermaid
@@ -176,15 +199,15 @@ flowchart TD
     D --> E[AMM]
     E --> F[/Swap SOL/]
     F --> G[/Transfer Tokens to Vault/]
-    G --> C
-    C --> H[/Update Token Price/]
-    H --> I((X))
+    G --> H[/Create Trading Position/]
+    H --> C
+    C --> I((X))
 ```
 - The operator initiates a swap of SOL for another token.
 - The vault checks if there is enough SOL available to swap.
 - The vault sends the SOL to the AMM for swapping.
+- The vault creates a trading position for the operator.
 - The AMM returns the swapped tokens to the vault.
-- The vault updates the token price based on the amount of SOL and tokens in the vault.
 
 ### Token to SOL swap
 
@@ -198,9 +221,26 @@ flowchart TD
     F --> G[/Transfer SOL to Vault/]
     G --> C
     C --> H[/Update Token Price/]
-    H --> I((X))
+    H --> K[/Remove Trading Position/]
+    K --> I((X))
 ```
 - The operator initiates a swap of tokens for SOL.
 - The vault sends the tokens to the AMM for swapping.
 - The AMM returns the swapped SOL to the vault.
 - The vault updates the token price based on the amount of SOL exchanged.
+- The vault removes the trading position for the operator.
+
+### Token Price Calculation
+
+Token price is calculated using a linear equation based on the amount of SOL issued, 
+and vault gains and losses. The token price is only calculated when 
+operator exits a position to the native SOL token.
+
+The equation under consideration at the moment looks like this: 
+
+Yt​=Y0​+βS0​Y0​​(St​−S0​)
+
+Where Y is the token price, Y0 is the initial token price,
+S0 is the initial SOL amount, St is the current SOL amount,
+and β is the gain/loss factor.
+
