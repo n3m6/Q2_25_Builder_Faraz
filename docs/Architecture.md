@@ -89,6 +89,7 @@ class CopyTradingVault {
 
 class TradingPosition {
     + operator: Pubkey
+    + token_mint: Pubkey
     + token_amount: u64
     + sol_amount: u64
     + bump: u8
@@ -123,6 +124,7 @@ to prevent drainage of SOL.
 
 The `TradingPosition` account is used to track trading positions that the operator takes.
 - `operator`: is the operator of the vault
+- `token_mint`: is the mint address of the token being traded
 - `token_amount`: is the amount of tokens received in a trade
 - `sol_amount`: is the amount of SOL placed in a trade
 - `bump`: unique identifier made of **operator pubkey**, **vault address** and **token mint address**
