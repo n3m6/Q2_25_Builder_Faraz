@@ -35,15 +35,21 @@ $ yarn --version
 
 ## Getting Started
 
-Fetch all the latest changes for the monorepo
+Initialize the submodules
 
-```
+```bash
 git submodule update --init --recursive
+```
+
+Fetch all the latest changes
+
+```bash
+git submodule update --recursive --remote
 ```
 
 Run the following in the monorepo root directory to install all dependencies.
 
-```
+```bash
 yarn install
 ```
 
