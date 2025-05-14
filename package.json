@@ -18,5 +18,6 @@
   "homepage": "https://github.com/n3m6/t3-builders-2025-q2#readme",
   "devDependencies": {
     "prettier": "^3.5.3"
-  }
+  },
+  "packageManager": "yarn@4.9.1"
 }

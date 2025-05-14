@@ -1,7 +1,6 @@
 packages:
   - prereq/**/*
   - classes/**/*
-  - capstone/**/*
   - anchor-amm/*
   - anchor-escrow/*
   - anchor-marketplace/*
